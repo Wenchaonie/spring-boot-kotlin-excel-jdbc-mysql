@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.kotlin:kotlin-jdbc:0.14.451">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-jdbc/0.14.451/2b6780389b2fd5d2f63e55f426678e95b8486d4d/kotlin-jdbc-0.14.451.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-jdbc/0.14.451/fd8f39ec7957d693c5506776984138821ab12369/kotlin-jdbc-0.14.451-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
