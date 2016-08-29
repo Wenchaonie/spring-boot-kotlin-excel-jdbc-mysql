@@ -18,15 +18,12 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.text.SimpleDateFormat
 
-
 import java.sql.ResultSet
 import java.util.*
 import javax.sql.DataSource
 import kotlin.jdbc.*
 
 data class UserWeight(val uid: String? = "", val weight: String? = "")
-
-
 
 
 @RestController

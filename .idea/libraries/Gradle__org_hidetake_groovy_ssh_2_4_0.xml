@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.hidetake:groovy-ssh:2.4.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hidetake/groovy-ssh/2.4.0/617546020c43833139321bcc8d16576b4a7f504f/groovy-ssh-2.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hidetake/groovy-ssh/2.4.0/cf8abf9ce273c2634cd7f4e2b0c0fb5ee2c5c80c/groovy-ssh-2.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

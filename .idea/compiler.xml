@@ -21,6 +21,8 @@
     <bytecodeTargetLevel>
       <module name="demo_main" target="1.8" />
       <module name="demo_test" target="1.8" />
+      <module name="spring-boot-kotlin-excel-jdbc-mysql_main" target="1.8" />
+      <module name="spring-boot-kotlin-excel-jdbc-mysql_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

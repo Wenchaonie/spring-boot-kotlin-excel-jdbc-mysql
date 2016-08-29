@@ -1,18 +1,22 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.M3'
-		kotlinVersion = '1.0.2'
+		springBootVersion =  '1.4.0.RELEASE'
+		kotlinVersion = '1.0.3'
 
 	}
 	repositories {
+		mavenLocal()
 		mavenCentral()
 		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
+		maven {
+			url  "http://jcenter.bintray.com"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath 'org.hidetake:gradle-ssh-plugin:2.4.0'
 
 	}
 	
@@ -21,12 +25,19 @@ buildscript {
 //	main.kotlin.srcDirs += 'src/main/kotlin'
 //	main.java.srcDirs += 'src/main/java'
 //}
+
+plugins {
+	id 'org.hidetake.ssh' version '2.4.0'
+}
+apply plugin: 'org.hidetake.ssh'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot' 
-
+apply plugin: 'spring-boot'
+springBoot {
+    executable = true
+}
 jar {
 	baseName = 'demo'
 	version = '0.0.1-SNAPSHOT'
@@ -35,13 +46,22 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven { url "https://repo.spring.io/snapshot" }
 	maven { url "https://repo.spring.io/milestone" }
+	maven {
+		url  "http://jcenter.bintray.com"
+	}
 }
 
 
 dependencies {
+    compile 'org.hidetake:gradle-ssh-plugin:2.4.0'
+
+	compile 'Pingplusplus:pingpp-java:2.1.7'
+	compile 'com.qiniu:qiniu-java-sdk:7.1.+'
+
 	compile group: 'org.apache.poi', name: 'poi', version: '3.9'
 	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
 
@@ -61,8 +81,23 @@ dependencies {
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
 
 
+//	compile('org.springframework.boot:spring-boot-starter-data-cassandra')
+//	compile('org.springframework.boot:spring-boot-starter-data-elasticsearch')
+//	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+//	compile('org.springframework.boot:spring-boot-starter-data-neo4j')
+//	compile('org.springframework.boot:spring-boot-starter-data-redis')
+//	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive')
+//	compile('org.springframework.boot:spring-boot-starter-jdbc')
+//	compile('org.springframework.boot:spring-boot-starter-remote-shell')
+//	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile("org.springframework.boot:spring-boot-starter-data-rest")
+
+	compile('org.litote.kmongo:kmongo:3.3.3')
+	compile('org.litote.kmongo:kmongo-async:3.3.3')
+
 //	runtime('mysql:mysql-connector-java')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+//	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 
@@ -72,3 +107,40 @@ eclipse {
 		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
 	}
 }
+
+
+
+remotes {
+	intranetServer {
+		host = '120.55.117.148'
+		user = 'root'
+		password = "Adminpass9898"
+	}
+}
+
+task deploy_first << {
+	ssh.run {
+		session(remotes.intranetServer) {
+			put from: 'build/libs/demo-0.0.1-SNAPSHOT.jar', into: '/data/qiniu_server/demo-0.0.1-SNAPSHOT.jar'
+			execute 'ln -s /data/qiniu_server/demo-0.0.1-SNAPSHOT.jar /etc/init.d/qiniu_server'
+			execute 'chmod -R 777 /etc/init.d/qiniu_server'
+			execute 'update-rc.d qiniu_server defaults'
+			execute 'sudo /etc/init.d/qiniu_server stop'
+			execute 'sudo /etc/init.d/qiniu_server start'
+		}
+	}
+}
+task deploy << {
+	ssh.run {
+		session(remotes.intranetServer) {
+			put from: 'build/libs/demo-0.0.1-SNAPSHOT.jar', into: '/data/qiniu_server/demo-0.0.1-SNAPSHOT.jar'
+
+			execute 'export JAVA_HOME=/usr/local/jdk'
+			execute 'export CLASSPATH=.:${JAVA_HOME}/lib'
+			execute 'export PATH=${JAVA_HOME}/bin:$PATH'
+
+			execute '/etc/init.d/qiniu_server restart'
+		}
+	}
+}
+
